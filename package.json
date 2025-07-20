@@ -12,6 +12,7 @@
   "dependencies": {
     "dotenv": "^17.2.0",
     "express": "^5.1.0",
+    "multer": "^2.0.2",
     "nodemon": "^2.0.22",
     "socket.io": "^4.6.1"
   }
