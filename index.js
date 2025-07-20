@@ -1,5 +1,6 @@
-const { Server } = require("socket.io");
 const express = require("express");
+const http = require("http");
+const { Server } = require("socket.io");
 const multer = require("multer");
 const fs = require("fs");
 const { OpenAI } = require("openai");
@@ -7,14 +8,16 @@ const cors = require("cors");
 const dotenv = require("dotenv");
 dotenv.config();
 
-const io = new Server(8000, {
-  cors: true,
+const app = express();
+const server = http.createServer(app);
+
+const io = new Server(server, {
+  cors: { origin: "*" }
 });
 
 const rooms = {};
 const userNames = {};
 
-const app = express();
 app.use(cors());
 const upload = multer({ dest: "uploads/" });
 
@@ -100,8 +103,9 @@ app.post("/api/translate", upload.single("audio"), async (req, res) => {
   }
 });
 
-app.listen(8001, () => {
-  console.log("Express server listening on port 8001");
+const PORT = process.env.PORT || 8000;
+server.listen(PORT, () => {
+  console.log(`Server listening on port ${PORT}`);
 });
 
 io.on("connection", (socket) => {
